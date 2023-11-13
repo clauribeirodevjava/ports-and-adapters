@@ -144,7 +144,6 @@ public class PalavraServiceImpl extends PalavraService {
 
     private List<Palavra> salvarPalindromos(List<Palavra> palavrasPalindromo) {
         return palavraRepository.saveAll(palavrasPalindromo);
-
     }
 
     public List<Palavra> salvarTodosPalindromos() {
