@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
-@RequestMapping("palindromos")
-
+@RequestMapping("/api")
 public class PalavraController {
 
     private final PalavraServicePort palavraServicePort;
@@ -17,12 +16,12 @@ public class PalavraController {
         this.palavraServicePort = palavraServicePort;
     }
 
-    @PostMapping
+    @PostMapping("palindromos")
     private Palavra create(@RequestBody Palavra palavra) {
         return palavraServicePort.savePalavra(palavra);
     }
 
-    @GetMapping
+    @GetMapping("todos")
        private List<Palavra> findAll() {
         return palavraServicePort.findAllPalavra();
     }

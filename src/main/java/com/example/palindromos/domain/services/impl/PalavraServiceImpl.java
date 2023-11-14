@@ -16,8 +16,7 @@ import java.util.Optional;
 @Service
 public class PalavraServiceImpl extends PalavraService {
 
-    @Autowired
-    private PalavraRepository palavraRepository;
+    private PalavraRepository palavraPalindromoRepository;
 
     private static List<PalavraEntity> palavrasPalindromo = new ArrayList<>();
 
@@ -143,14 +142,14 @@ public class PalavraServiceImpl extends PalavraService {
     }
     // Método para salvar palíndromos no repositório.
     private List<PalavraEntity> salvarPalindromos(List<PalavraEntity> palavrasPalindromo) {
-        return palavraRepository.saveAll(palavrasPalindromo);
+        return palavraPalindromoRepository.saveAll(palavrasPalindromo);
     }
     // Método para listar todos os palíndromos no repositório.
     public List<PalavraEntity> listarPalindromos() {
-        return palavraRepository.findAll();
+        return palavraPalindromoRepository.findAll();
     }
     // Método para buscar um palíndromo por ID no repositório.
     public Optional<PalavraEntity> buscarPalindromoPorId(Long id) {
-        return palavraRepository.findById(id);
+        return palavraPalindromoRepository.findById(id);
     }
 }
