@@ -1,7 +1,7 @@
 package com.example.palindromos.domain.services.impl;
 
+import com.example.palindromos.adapter.entities.PalavraEntity;
 import com.example.palindromos.adapter.repository.PalavraRepository;
-import com.example.palindromos.domain.Palavra;
 import com.example.palindromos.domain.ports.PalavraRepositoryPort;
 import com.example.palindromos.domain.services.PalavraService;
 import org.json.JSONArray;
@@ -19,13 +19,13 @@ public class PalavraServiceImpl extends PalavraService {
     @Autowired
     private PalavraRepository palavraRepository;
 
-    private static List<Palavra> palavrasPalindromo = new ArrayList<>();
+    private static List<PalavraEntity> palavrasPalindromo = new ArrayList<>();
 
     public PalavraServiceImpl(PalavraRepositoryPort palavraRepositoryPort) {
         super(palavraRepositoryPort);
     }
 
-    public List<Palavra> encontrarPalavrasPalindromos(String jsonMatriz) {
+    public List<PalavraEntity> encontrarPalavrasPalindromos(String jsonMatriz) {
 
         try {
             JSONObject jsonObj = new JSONObject(jsonMatriz);
@@ -51,7 +51,7 @@ public class PalavraServiceImpl extends PalavraService {
                 if (numCols == 0) {
                     numCols = currentCols;
                 } else if (numCols != currentCols) {
-                    System.out.println("A matriz não é quadrada. O número de colunas na linha " + i
+                    System.out.println("Matriz não quadrada. Número de colunas na linha " + i
                             + " é diferente das linhas anteriores.");
                     return null;
                 }
@@ -64,12 +64,12 @@ public class PalavraServiceImpl extends PalavraService {
 
             return salvarPalindromos(palavrasPalindromo);
         } catch (Exception e) {
-            System.out.println("Erro ao analisar o JSON: " + e.getMessage());
+            System.out.println("Erro na analise do JSON: " + e.getMessage());
             return null;
         }
     }
-
-    public List<Palavra> encontrarPalindromosNaMatriz(char[][] matriz) {
+    // Itera sobre a matriz para encontrar palíndromos em diferentes direções.
+    public List<PalavraEntity> encontrarPalindromosNaMatriz(char[][] matriz) {
         int numLinhas = matriz.length;
         int numCols = matriz[0].length;
         for (int linha = 0; linha < numLinhas; linha++) {
@@ -78,13 +78,13 @@ public class PalavraServiceImpl extends PalavraService {
                 for (int len = 1; coluna + len <= numCols; len++) {
                     String palavraHorizontal = new String(matriz[linha], coluna, len);
                     if (eUmPalindromo(palavraHorizontal)) {
-                        Palavra encontradoPalindromo = new Palavra();
+                        PalavraEntity encontradoPalindromo = new PalavraEntity();
                         encontradoPalindromo.setDescricao(palavraHorizontal);
                         inserirPalindromoNaLista(palavraHorizontal);
                     }
                 }
 
-                // Vertical (cima para baixo)
+                // Verifica palíndromos na direção vertical (cima para baixo).
                 for (int len = 1; linha + len <= numLinhas; len++) {
                     StringBuilder palavraVertical = new StringBuilder();
                     for (int i = 0; i < len; i++) {
@@ -96,7 +96,7 @@ public class PalavraServiceImpl extends PalavraService {
                 }
 
 
-                // Diagonal (cima-esquerda para baixo-direita)
+                // Verifica palíndromos na direção diagonal (cima-esquerda para baixo-direita).
                 for (int len = 1; linha + len <= numLinhas && coluna + len <= numCols; len++) {
                     StringBuilder palavraDiagonal = new StringBuilder();
                     for (int i = 0; i < len; i++) {
@@ -107,7 +107,7 @@ public class PalavraServiceImpl extends PalavraService {
                     }
                 }
 
-                // Diagonal (cima-direita para baixo-esquerda)
+                // Verifica palíndromos na direção diagonal (cima-direita para baixo-esquerda).
                 for (int len = 1; linha + len <= numLinhas && coluna - len >= 0; len++) {
                     StringBuilder palavraDiagonal = new StringBuilder();
                     for (int i = 0; i < len; i++) {
@@ -121,36 +121,36 @@ public class PalavraServiceImpl extends PalavraService {
         }
         return palavrasPalindromo;
     }
-
-    public static void inserirPalindromoNaLista(String palavra) {
-        Palavra encontradoPalindromo = new Palavra();
-        encontradoPalindromo.setDescricao(palavra);
+    // Método para inserir um palíndromo na lista de palíndromos.
+    public static void inserirPalindromoNaLista(String palavraEntity) {
+        PalavraEntity encontradoPalindromo = new PalavraEntity();
+        encontradoPalindromo.setDescricao(palavraEntity);
         palavrasPalindromo.add(encontradoPalindromo);
     }
-
-    public static boolean eUmPalindromo(String palavra) {
-        palavra = palavra.replaceAll("\\s", "").toLowerCase();
-        if (palavra.length() < 4) {
+    // Método para verificar se uma palavra é um palíndromo.
+    public static boolean eUmPalindromo(String descricao) {
+        descricao = descricao.replaceAll("\\s", "").toLowerCase();
+        if (descricao.length() < 4) {
             return false;
         }
-        int comprimento = palavra.length();
+        int comprimento = descricao.length();
         for (int i = 0; i < comprimento / 2; i++) {
-            if (palavra.charAt(i) != palavra.charAt(comprimento - i - 1)) {
+            if (descricao.charAt(i) != descricao.charAt(comprimento - i - 1)) {
                 return false;
             }
         }
         return true;
     }
-
-    private List<Palavra> salvarPalindromos(List<Palavra> palavrasPalindromo) {
+    // Método para salvar palíndromos no repositório.
+    private List<PalavraEntity> salvarPalindromos(List<PalavraEntity> palavrasPalindromo) {
         return palavraRepository.saveAll(palavrasPalindromo);
     }
-
-    public List<Palavra> salvarTodosPalindromos() {
+    // Método para listar todos os palíndromos no repositório.
+    public List<PalavraEntity> listarPalindromos() {
         return palavraRepository.findAll();
     }
-
-    public Optional<Palavra> buscarPalindromoPorId(Long id) {
+    // Método para buscar um palíndromo por ID no repositório.
+    public Optional<PalavraEntity> buscarPalindromoPorId(Long id) {
         return palavraRepository.findById(id);
     }
 }

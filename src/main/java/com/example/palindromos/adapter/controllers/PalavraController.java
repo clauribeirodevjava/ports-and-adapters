@@ -13,8 +13,6 @@ public class PalavraController {
 
     private final PalavraServicePort palavraServicePort;
 
-    //public PalavraController() { palavraServicePort = null; }
-
     public PalavraController(PalavraServicePort palavraServicePort) {
         this.palavraServicePort = palavraServicePort;
     }

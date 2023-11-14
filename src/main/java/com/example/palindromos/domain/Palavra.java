@@ -1,7 +1,7 @@
 package com.example.palindromos.domain;
 
 public class Palavra {
-    private Integer id;
+    private Long id;
 
     private String descricao;
 
@@ -11,17 +11,17 @@ public class Palavra {
 
     }
 
-    public Palavra(Integer id, String descricao, Boolean confere) {
+    public Palavra(Long id, String descricao, Boolean confere) {
         this.id = id;
         this.descricao = descricao;
         this.confere = confere;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
