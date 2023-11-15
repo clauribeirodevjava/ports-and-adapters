@@ -1,8 +1,10 @@
 package com.example.palindromos.domain.services.impl;
 
+import com.example.palindromos.adapter.entities.EntityMatriz;
 import com.example.palindromos.adapter.entities.PalavraEntity;
 import com.example.palindromos.adapter.repository.PalavraRepository;
 import com.example.palindromos.domain.ports.PalavraRepositoryPort;
+import com.example.palindromos.domain.ports.PalavraServicePort;
 import com.example.palindromos.domain.services.PalavraService;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,140 +18,58 @@ import java.util.Optional;
 @Service
 public class PalavraServiceImpl extends PalavraService {
 
-    private PalavraRepository palavraPalindromoRepository;
+    private PalavraRepository palavraRepository;
+    private PalavraServicePort palavraServicePort;
 
     private static List<PalavraEntity> palavrasPalindromo = new ArrayList<>();
-
     public PalavraServiceImpl(PalavraRepositoryPort palavraRepositoryPort) {
         super(palavraRepositoryPort);
     }
+    public static void main(String[] args) {
+        // Exemplo de matriz em formato JSON
+        String jsonMatrix = "[[\"A\",\"O\",\"S\",\"S\",\"O\"],[\"Y\",\"R\",\"Z\",\"X\",\"L\"],[\"J\",\"S\",\"A\",\"P\",\"M\"],[\"J\",\"K\",\"P\",\"R\",\"Z\"],[\"Y\",\"L\",\"E\",\"R\",\"A\"]]";
 
-    public List<PalavraEntity> encontrarPalavrasPalindromos(String jsonMatriz) {
+        // Converter a string JSON para matriz de caracteres
+        char[][] matrix = new Gson.(jsonMatrix, char[][].class);
 
-        try {
-            JSONObject jsonObj = new JSONObject(jsonMatriz);
-
-            JSONArray matrizJson = jsonObj.getJSONArray("matriz");
-            int numRows = matrizJson.length();
-
-            if (numRows > 10) {
-                System.out.println("O número de linhas excede o máximo de 10.");
-                return null;
-            }
-
-            char[][] matriz = new char[numRows][];
-            int numCols = 0;
-
-            for (int i = 0; i < numRows; i++) {
-                JSONArray row = matrizJson.getJSONArray(i);
-                int currentCols = row.length();
-                if (currentCols > 10) {
-                    System.out.println("O número de colunas na linha " + i + " excede o máximo de 10.");
-                    return null;
-                }
-                if (numCols == 0) {
-                    numCols = currentCols;
-                } else if (numCols != currentCols) {
-                    System.out.println("Matriz não quadrada. Número de colunas na linha " + i
-                            + " é diferente das linhas anteriores.");
-                    return null;
-                }
-                matriz[i] = new char[currentCols];
-                for (int j = 0; j < currentCols; j++) {
-                    matriz[i][j] = row.getString(j).charAt(0);
-                }
-            }
-            encontrarPalindromosNaMatriz(matriz);
-
-            return salvarPalindromos(palavrasPalindromo);
-        } catch (Exception e) {
-            System.out.println("Erro na analise do JSON: " + e.getMessage());
-            return null;
-        }
+        // Encontrar e exibir palíndromos na matriz
+        encontrarPalindromos(matrix);
     }
-    // Itera sobre a matriz para encontrar palíndromos em diferentes direções.
-    public List<PalavraEntity> encontrarPalindromosNaMatriz(char[][] matriz) {
-        int numLinhas = matriz.length;
-        int numCols = matriz[0].length;
-        for (int linha = 0; linha < numLinhas; linha++) {
-            for (int coluna = 0; coluna < numCols; coluna++) {
-                // Horizontal (esquerda para direita)
-                for (int len = 1; coluna + len <= numCols; len++) {
-                    String palavraHorizontal = new String(matriz[linha], coluna, len);
-                    if (eUmPalindromo(palavraHorizontal)) {
-                        PalavraEntity encontradoPalindromo = new PalavraEntity();
-                        encontradoPalindromo.setDescricao(palavraHorizontal);
-                        inserirPalindromoNaLista(palavraHorizontal);
-                    }
-                }
 
-                // Verifica palíndromos na direção vertical (cima para baixo).
-                for (int len = 1; linha + len <= numLinhas; len++) {
-                    StringBuilder palavraVertical = new StringBuilder();
-                    for (int i = 0; i < len; i++) {
-                        palavraVertical.append(matriz[linha + i][coluna]);
-                    }
-                    if (eUmPalindromo(palavraVertical.toString())) {
-                        inserirPalindromoNaLista(palavraVertical.toString());
-                    }
-                }
+    public static void encontrarPalindromos(char[][] matrix) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
 
-
-                // Verifica palíndromos na direção diagonal (cima-esquerda para baixo-direita).
-                for (int len = 1; linha + len <= numLinhas && coluna + len <= numCols; len++) {
-                    StringBuilder palavraDiagonal = new StringBuilder();
-                    for (int i = 0; i < len; i++) {
-                        palavraDiagonal.append(matriz[linha + i][coluna + i]);
-                    }
-                    if (eUmPalindromo(palavraDiagonal.toString())) {
-                        inserirPalindromoNaLista(palavraDiagonal.toString());
-                    }
-                }
-
-                // Verifica palíndromos na direção diagonal (cima-direita para baixo-esquerda).
-                for (int len = 1; linha + len <= numLinhas && coluna - len >= 0; len++) {
-                    StringBuilder palavraDiagonal = new StringBuilder();
-                    for (int i = 0; i < len; i++) {
-                        palavraDiagonal.append(matriz[linha + i][coluna - i]);
-                    }
-                    if (eUmPalindromo(palavraDiagonal.toString())) {
-                        inserirPalindromoNaLista(palavraDiagonal.toString());
-                    }
-                }
+        // Verificar palíndromos nas linhas horizontais
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                checkPalindrome(matrix, i, j, i, j + 1); // Horizontal
+                checkPalindrome(matrix, i, j, i + 1, j); // Vertical
+                checkPalindrome(matrix, i, j, i + 1, j + 1); // Diagonal
+                checkPalindrome(matrix, i, j, i - 1, j + 1); // Diagonal inversa
             }
         }
-        return palavrasPalindromo;
     }
-    // Método para inserir um palíndromo na lista de palíndromos.
-    public static void inserirPalindromoNaLista(String palavraEntity) {
-        PalavraEntity encontradoPalindromo = new PalavraEntity();
-        encontradoPalindromo.setDescricao(palavraEntity);
-        palavrasPalindromo.add(encontradoPalindromo);
-    }
-    // Método para verificar se uma palavra é um palíndromo.
-    public static boolean eUmPalindromo(String descricao) {
-        descricao = descricao.replaceAll("\\s", "").toLowerCase();
-        if (descricao.length() < 4) {
-            return false;
-        }
-        int comprimento = descricao.length();
-        for (int i = 0; i < comprimento / 2; i++) {
-            if (descricao.charAt(i) != descricao.charAt(comprimento - i - 1)) {
-                return false;
+
+    private static void checkPalindrome(char[][] matrix, int startRow, int startCol, int endRow, int endCol) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+
+        StringBuilder palindrome = new StringBuilder();
+
+        while (startRow >= 0 && startRow < rows && startCol >= 0 && startCol < cols) {
+            palindrome.append(matrix[startRow][startCol]);
+
+            if (eUmPalindrome(palindrome.toString())) {
+                System.out.println("Encontrado palíndromo: " + palindrome);
             }
+
+            startRow += endRow > startRow ? 1 : (endRow < startRow ? -1 : 0);
+            startCol += endCol > startCol ? 1 : (endCol < startCol ? -1 : 0);
         }
-        return true;
     }
-    // Método para salvar palíndromos no repositório.
-    private List<PalavraEntity> salvarPalindromos(List<PalavraEntity> palavrasPalindromo) {
-        return palavraPalindromoRepository.saveAll(palavrasPalindromo);
-    }
-    // Método para listar todos os palíndromos no repositório.
-    public List<PalavraEntity> listarPalindromos() {
-        return palavraPalindromoRepository.findAll();
-    }
-    // Método para buscar um palíndromo por ID no repositório.
-    public Optional<PalavraEntity> buscarPalindromoPorId(Long id) {
-        return palavraPalindromoRepository.findById(id);
+
+    private static boolean eUmPalindrome(String str) {
+        return str.equals(new StringBuilder(str).reverse().toString());
     }
 }
