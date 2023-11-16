@@ -7,7 +7,6 @@ import java.util.List;
 public interface PalavraRepositoryPort {
 
     Palavra savePalavra(Palavra palavra);
-
     List<Palavra> findAllPalavra();
 
 }

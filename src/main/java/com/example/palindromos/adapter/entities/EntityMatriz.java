@@ -1,23 +1,26 @@
 package com.example.palindromos.adapter.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.json.JSONObject;
 
 import java.util.List;
 
 public class EntityMatriz {
     private char[][] matriz;
-    private List<String> palindromosEncontrados;
 
-    public EntityMatriz(char[][] matriz, List<String> palindromosEncontrados) {
+
+    public EntityMatriz() {
+    }
+
+    public EntityMatriz(char[][] matriz) {
         this.matriz = matriz;
-        this.palindromosEncontrados = palindromosEncontrados;
     }
 
     public char[][] getMatriz() {
         return matriz;
     }
 
-    public List<String> getPalindromosEncontrados() {
-        return palindromosEncontrados;
+    public void setMatriz(char[][] matriz) {
+        this.matriz = matriz;
     }
 }
