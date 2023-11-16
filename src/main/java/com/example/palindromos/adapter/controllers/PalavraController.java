@@ -23,13 +23,11 @@ public class PalavraController {
         // Lógica para encontrar palíndromos usando palavraService
         char[][] matriz = entityMatriz.getMatriz();
 
-        List<String> encontradosPalindromos = Collections.singletonList(palavraService.encontrarPalindromos(entityMatriz));
+        List<String> encontradosPalindromos = palavraService.encontrarPalindromos(entityMatriz);
 
         return "Lista de palíndromos: " + encontradosPalindromos.toString();
     }
-    public List<String> encontradosPalindromos(@RequestBody EntityMatriz entityMatriz) {
-        return Collections.singletonList(palavraService.encontrarPalindromos(entityMatriz));
-    }
+   
     @GetMapping("todos")
        private List<Palavra> findAllPalavra() {
         return palavraServicePort.findAllPalavra();
