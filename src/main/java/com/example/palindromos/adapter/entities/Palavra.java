@@ -1,4 +1,6 @@
-package com.example.palindromos.domain;
+package com.example.palindromos.adapter.entities;
+
+import com.example.palindromos.adapter.dto.PalavraDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,22 +9,16 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Palavra {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
 	private String descricao;
-
-	private Boolean confere;
 
 	public Palavra() {
 	}
 
-	public Palavra(String descricao, Boolean confere) {
+	public Palavra(String descricao) {
 		this.descricao = descricao;
-		this.confere = confere;
-		
 	}
 
 	public Long getId() {
@@ -41,17 +37,12 @@ public class Palavra {
 		this.descricao = descricao;
 	}
 
+	public PalavraDTO toDTO() {
+		return new PalavraDTO(descricao);
+	}
 
 	@Override
 	public String toString() {
 		return "Palavra [descricao=" + descricao + "]";
-	}
-
-	public Boolean getConfere() {
-		return confere;
-	}
-
-	public void setConfere(Boolean confere) {
-		this.confere = confere;
 	}
 }

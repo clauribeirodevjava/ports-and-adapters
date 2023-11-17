@@ -1,11 +1,13 @@
 package com.example.palindromos.domain.ports;
 
-import com.example.palindromos.domain.Palavra;
-
 import java.util.List;
 
-public interface PalavraServicePort {
-    Palavra savePalavra(Palavra palavra);
+import com.example.palindromos.adapter.dto.MatrizDTO;
+import com.example.palindromos.adapter.dto.PalavraDTO;
+import com.example.palindromos.adapter.entities.Palavra;
 
-    List<Palavra>findAllPalavra();
+public interface PalavraServicePort {
+    List<PalavraDTO> encontrarPalindromos(MatrizDTO entityMatriz);
+    List<Palavra> saveAll(List<PalavraDTO> palavrasDTO);
+    List<PalavraDTO> findAllPalavra();
 }
