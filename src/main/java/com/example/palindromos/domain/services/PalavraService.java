@@ -43,9 +43,7 @@ public class PalavraService  {
             String rowString = new String(matriz[i]);
             if (isPalindrome(rowString)) {
                 palindromes.add(new Palavra(rowString, true));
-            } else {
-                palindromes.add(new Palavra(rowString, false));
-            }
+            } 
         }
 
         // Verificar palíndromos nas colunas
@@ -57,8 +55,6 @@ public class PalavraService  {
             String colString = colStringBuilder.toString();
             if (isPalindrome(colString)) {
                 palindromes.add(new Palavra(colString, true));
-            } else {
-                palindromes.add(new Palavra(colString, false));
             }
         }
 
@@ -70,8 +66,6 @@ public class PalavraService  {
         String diagonalPrincipal = diagonalPrincipalBuilder.toString();
         if (isPalindrome(diagonalPrincipal)) {
             palindromes.add(new Palavra(diagonalPrincipal, true));
-        } else {
-            palindromes.add(new Palavra(diagonalPrincipal, false));
         }
 
         // Verificar palíndromos na diagonal secundária
@@ -82,15 +76,17 @@ public class PalavraService  {
         String diagonalSecundaria = diagonalSecundariaBuilder.toString();
         if (isPalindrome(diagonalSecundaria)) {
             palindromes.add(new Palavra(diagonalSecundaria, true));
-        } else {
-            palindromes.add(new Palavra(diagonalSecundaria, false));
-        }
+        } 
 
         return palindromes;
     }
     private static boolean isPalindrome(String str) {
         String reversed = new StringBuilder(str).reverse().toString();
         return str.equals(reversed);
+    }
+    
+    public List<Palavra>  findAllPalavra() {
+    	return palavraRepositoryPort.findAll();
     }
     
 /*
