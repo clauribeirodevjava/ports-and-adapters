@@ -1,12 +1,9 @@
 package com.example.palindromos.domain.ports;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.example.palindromos.domain.Palavra;
 
-import java.util.List;
-
-public interface PalavraRepositoryPort {
-
-    Palavra savePalavra(Palavra palavra);
-    List<Palavra> findAllPalavra();
-
+@Repository
+public interface PalavraRepositoryPort extends JpaRepository<Palavra, Long> {
 }

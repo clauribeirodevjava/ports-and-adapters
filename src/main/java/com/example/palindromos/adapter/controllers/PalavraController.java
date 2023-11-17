@@ -1,35 +1,29 @@
 package com.example.palindromos.adapter.controllers;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.palindromos.adapter.entities.EntityMatriz;
 import com.example.palindromos.domain.Palavra;
-import com.example.palindromos.domain.ports.PalavraServicePort;
-import com.example.palindromos.domain.services.impl.PalavraServiceImpl;
-import org.json.JSONObject;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
-import java.util.List;
+import com.example.palindromos.domain.services.PalavraService;
 
 @RestController
 @RequestMapping("/api")
 public class PalavraController {
-    private final PalavraServiceImpl palavraService;
-    private final PalavraServicePort palavraServicePort;
-    public PalavraController(PalavraServiceImpl palavraService, PalavraServicePort palavraServicePort) {
+    private final PalavraService palavraService;
+  
+    public PalavraController(PalavraService palavraService) {
         this.palavraService = palavraService;
-        this.palavraServicePort = palavraServicePort;
     }
     @PostMapping("palindromos")
     public String encontrarPalindromos(@RequestBody EntityMatriz entityMatriz) {
-        // Lógica para encontrar palíndromos usando palavraService
-        char[][] matriz = entityMatriz.getMatriz();
-
-        List<String> encontradosPalindromos = palavraService.encontrarPalindromos(entityMatriz);
-
+      
+     
+        List<Palavra> encontradosPalindromos = palavraService.encontrarPalindromos(entityMatriz);
+        palavraService.saveAll(encontradosPalindromos);
         return "Lista de palíndromos: " + encontradosPalindromos.toString();
-    }
-   
-    @GetMapping("todos")
-       private List<Palavra> findAllPalavra() {
-        return palavraServicePort.findAllPalavra();
     }
 }

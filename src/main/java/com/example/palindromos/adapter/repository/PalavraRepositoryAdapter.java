@@ -1,27 +1,25 @@
 package com.example.palindromos.adapter.repository;
+/*
+import com.example.palindromos.adapter.entities.PalavraEntity;
+import com.example.palindromos.domain.Palavra;
+import com.example.palindromos.domain.ports.PalavraRepositoryPort;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
-
-import com.example.palindromos.adapter.entities.PalavraEntity;
-import com.example.palindromos.domain.Palavra;
-import com.example.palindromos.domain.ports.PalavraRepositoryPort;
-
 @Component
+@AllArgsConstructor
 public class PalavraRepositoryAdapter implements PalavraRepositoryPort {
 
     private final PalavraRepository palavraRepository;
 
     private final ModelMapper modelMapper;
-    
-    public PalavraRepositoryAdapter(PalavraRepository palavraRepository, ModelMapper modelMapper) {
-    	this.palavraRepository = palavraRepository;
-    	this.modelMapper = modelMapper;
-    }
-  
+
     @Override
     public Palavra savePalavra(Palavra palavra) {
 
@@ -42,3 +40,4 @@ public class PalavraRepositoryAdapter implements PalavraRepositoryPort {
                 .collect(Collectors.toList());
     }
 }
+*/
